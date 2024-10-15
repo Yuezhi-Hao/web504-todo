@@ -1,22 +1,6 @@
 //firebase config 
 // Your web app's Firebase configuration
 
-const firebaseConfig = {
-
-    apiKey: "AIzaSyDfwbdmlQl7zX9BDnoCYpWC01RLeBf189A",
-  
-    authDomain: "my-project-b7492.firebaseapp.com",
-  
-    projectId: "my-project-b7492",
-  
-    storageBucket: "my-project-b7492.appspot.com",
-  
-    messagingSenderId: "31311538636",
-  
-    appId: "1:31311538636:web:e3c5e1b831692c4cabd569"
-  
-  };
-  
 // Initialise Firebase
 const app = initializeApp(firebaseConfig);
 const database = firebase.database();
