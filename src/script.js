@@ -1,3 +1,5 @@
+let todoArray = [];
+
 // access input field
 const input = document.querySelector('#todo-input')
 
@@ -6,6 +8,10 @@ document.querySelector('#submit').addEventListener('click', () => {
     // value of the input field
     const inputData = input.value
     input.value = ''
+
+    todoArray.push(inputData);
+
+    console.log('Current todoArray:', todoArray);
 
     // creating todo item element
     const todo_el = document.createElement('div')
@@ -55,6 +61,8 @@ document.querySelector('#submit').addEventListener('click', () => {
 
     // edit functionality
     todo_edit_el.addEventListener('click', (e) => {
+        const index = e.target.dataset.index;
+        console.log(index)
         if (todo_edit_el.classList.contains('edit')) {
             todo_edit_el.classList.remove('edit')
             todo_edit_el.classList.remove('fa-pen-to-square')
@@ -69,11 +77,83 @@ document.querySelector('#submit').addEventListener('click', () => {
             todo_edit_el.classList.add('edit')
             todo_input_el.setAttribute('readonly', 'readonly')
         }
+        // Update the todoArray with the new value
+        if (index > -1) {
+            todoArray.splice(index, 1, todo_input_el.value);
+            console.log('Updated array:', todoArray);
+        }
     })
 
-    // delete functionality
-    todo_delete_el.addEventListener('click', (e) => {
-        console.log(todo_el)
-        document.querySelector('.todo-lists').removeChild(todo_el)
+// delete functionality
+todo_delete_el.addEventListener('click', (e) => {
+    const index = todoArray.indexOf(todo_input_el.value);
+
+    // Remove the element from the array
+    if (index > -1) {
+        todoArray.splice(index, 1);
+        console.log('Array after deletion:', todoArray);
+    }
+
+    document.querySelector('.todo-lists').removeChild(todo_el)
     })
 })
+
+todo_edit_el.addEventListener('click', (e) => {
+    const index = e.target.dataset.index;
+    
+    if (index !== undefined) {
+        if (todo_edit_el.classList.contains('edit')) {
+            // Enter edit mode
+            todo_edit_el.classList.remove('edit', 'fa-pen-to-square');
+            todo_edit_el.classList.add('fa-x', 'save');
+            todo_input_el.removeAttribute('readonly');
+            todo_input_el.focus();
+        } else {
+            // Save changes
+            todo_edit_el.classList.remove('save', 'fa-x');
+            todo_edit_el.classList.add('fa-pen-to-square', 'edit');
+            todo_input_el.setAttribute('readonly', 'readonly');
+
+            // Update the todoArray with the new value
+            todoArray[index] = todo_input_el.value;
+            console.log('Updated array:', todoArray);
+        }
+    }
+});
+
+
+todo_delete_el.addEventListener('click', (e) => {
+    const index = e.target.dataset.index;
+    if (index !== undefined) {
+        // Remove the item from the array
+        todoArray.splice(index, 1);
+        console.log('Array after deletion:', todoArray);
+
+        // Remove the todo item from the DOM
+        document.querySelector('.todo-lists').removeChild(todo_el);
+
+        // Update indexes
+        updateIndexes();
+    }
+});
+
+function updateIndexes() {
+  const todoItems = document.querySelectorAll('.todo-item')
+todoItems.forEach((item, newIndex) => {
+  item.dataset.index = newIndex
+
+  //Update data-index for edit button
+  const editButton = item.querySelector('.edit, .save')
+ if(editButton) editButton.dataset.index = newIndex
+
+ //Update data-index for delete button
+
+ const deleteButton = item.querySelector('.fa-trash')
+ if(deleteButton) deleteButton.dataset.index = newIndex
+})
+
+}
+
+// Insdie the delete event listener make sure you have the following
+
+updateIndexes()
