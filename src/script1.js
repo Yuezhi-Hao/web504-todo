@@ -47,3 +47,58 @@ darkToggle.addEventListener("Click", () => {
     document.body.classList.toggle("dark-mode")
 });
 
+if(todoItem.completed) {
+    statusIcon.classList.add("completed")
+    statusbar.InnerHTML = '<i class = "fas fa-check"></i>'
+} else if (todoItem.priority === "high") {
+    statusIcon.classList.add("priority")
+    statusIcon.InnerHTML = '<i class = "fa-exclamation-circle"</i>'
+} else if (todoItem.priority === 'medium') {
+    statusIcon.classList.add('in-progress');
+    statusIcon.innerHTML = '<i class="fas fa-hourglass-half"></i>';
+} else if (todoItem.priority === 'low') {
+    statusIcon.classList.add('waiting');
+    statusIcon.innerHTML = '<i class="fas fa-pause"></i>';
+} else {
+    statusIcon.classList.add('unfinished');
+    statusIcon.innerHTML = '<i class="fas fa-times"></i>';
+}
+todoContent.appendChild(statusIcon);
+
+//display the todo text
+const todoTextSpan = document.createElement('span')
+todoTextSpan.textContent = `${todoItem.text}`
+if(todoItem.completed) {
+    todoTextSpan.classList.add("completed") //Style the text if completed
+}
+todoContent.appendChild(todoTextSpan);
+
+//create an edit button
+
+const editBtn = document.createElement('i')
+editBtn.classList.add('fas', 'fa-edit', 'edit-btn')
+editBtn.addEventListener("click", (e) => {
+    e.stopPropagation() //prevent click from toggling completion
+    const editInput = document.createElement("input")
+    editInput.type = "text"
+    editInput.classList.add('todo-input-edit')
+    editInput.value = todoItem.text
+    todoContent.replaceChild(editInput, todoTextSpan) //to replace text with input field
+    editInput.focus();
+
+    //when editing is complete on losing focus
+    editInput.addEventListener("blur", () => {
+        const updatedText = editInput.value.trim()
+        if(updatedText.length > 0) {
+            //update the todo text and date in Firebase
+            todoRef.child(todoKey).update({
+                text: updatedText,
+                date: new Date().toLocaleDateString()
+            }) }
+            else {
+                //revert to original text if no valid input
+                todoContent.replaceChild(todoTextSpan, editInput)
+            } 
+    });
+});
+
