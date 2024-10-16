@@ -134,3 +134,14 @@ e.stopPropagation() //prevent click from triggerings any other action
 //remove the todo item from firebase
 todoRef.child(todoKey).remove();
 });
+
+li.appendChild(todoContent)
+if(todoItem.complete) {
+    li.appendChild(undoBtn) // add undo button only if the task is completed
+} else{
+    li.appendChild(completeBtn) // add complete button if the task is not completed
+}
+
+li.appendChild(editBtn)
+li.appendChild(deleteBtn)
+todoList.appendChild(li) //add the list item to the todo list UI
