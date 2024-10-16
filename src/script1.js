@@ -102,3 +102,35 @@ editBtn.addEventListener("click", (e) => {
     });
 });
 
+//create a complete button
+const completeBtn = document.createElement("i")
+completeBtn.classList.add("fas", "fa-check", "complete-btn")
+completeBtn.addEventListener('click', (e) => {
+    e.stopPropagation() //prevent click from triggering other actions
+    //toggle the completion status of the todo item
+        todoRef.child(todoKey).update({
+        complete: !todoItem.completed,
+
+    });
+});
+
+//create an undo button for completed task
+const undoBtn = document.createElement("i")
+undoBtn.classList.add("fas", "fa-undo", "undo-btn")
+undoBtn.addEventListener("click", (e) => {
+e.stopPropagation() //prevent click from triggering any other actions
+//set the task as incomplete
+todoRef.child(todoKey).update({
+    complete: false,
+ })
+})
+
+//create a delete button
+
+const deleteBtn = document.createElement("i")
+deleteBtn.classList.add("fas", "fa-delete", "delete-btn")
+deleteBtn.addEventListener("click", (e) => {
+e.stopPropagation() //prevent click from triggerings any other action
+//remove the todo item from firebase
+todoRef.child(todoKey).remove();
+});
