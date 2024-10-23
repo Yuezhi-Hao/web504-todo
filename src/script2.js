@@ -35,6 +35,39 @@ loginButton.addEventListener('click', () => {
     signInWithPopup(auth, provider)
     .then((result) => {
         // hide login page and show chat page after successful login
+        loginPage.classList.add('hidden')
+        chatPage.classList.remove('hidden')
+    })
+    .catch((error) => {
+        console.error('Error during login', error)
     })
 });
 
+//Sign out 
+
+logoutButton.addEventListener('click', () => {
+    signOut(auth).then(() => {
+        // Show login page and hide chat page after logout
+        loginPage.classList.remove('hidden')
+        chatPage.classList.add('hidden')
+    })
+});
+
+//Send message
+sendButton.addEventListener('click', () => {
+    // Get message from input field
+    const message = messageInput.value
+    if(message) {
+        //Reference to the "messages" node in the database
+        const messageRef = ref(database, 'messages')
+        // Push new message to the database with user info and timestamp
+        push(messageRef, {
+            user: auth.currentUser.displayName,
+            message: message, 
+            timestamp: new Date().toISOString()
+        })
+        // Clear the input field after sending
+        messageInput.value = ''
+    }
+
+})
