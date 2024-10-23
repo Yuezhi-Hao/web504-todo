@@ -145,3 +145,19 @@ if(todoItem.complete) {
 li.appendChild(editBtn)
 li.appendChild(deleteBtn)
 todoList.appendChild(li) //add the list item to the todo list UI
+
+
+//event listener for search functionality
+
+searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase()
+    const todos = document.querySelectorAll("#todo-list li")
+    todos.forEach((todo) => {
+        const text = todo.querySelector("span").textContent.toLowerCase()
+        if(text.includes(filter)) {
+            todo.style.display = "";
+        } else {
+            todo.style.display = "none";
+        }
+    });
+});
